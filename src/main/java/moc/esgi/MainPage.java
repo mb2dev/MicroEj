@@ -57,17 +57,13 @@ public class MainPage extends Page  {
 			//lb1Style.setPadding(myPadding);
 			//lb1Style.setForegroundColor(Colors.NAVY);
 			
-			
-			
-			
+
 			EditableStyle tt = new EditableStyle();
 			tt.setAlignment(GraphicsContext.HCENTER | GraphicsContext.VCENTER);
 			tt.setBackgroundColor(Colors.WHITE);
 			tt.setForegroundColor(Colors.WHITE);
 			TypeSelector btnSe2 = new TypeSelector(Split.class);
 			StyleHelper.getStylesheet().addRule( btnSe2, tt);
-			
-			
 			
 			EditableStyle transp = new EditableStyle(); // transparent Label if child of a button
 			transp.setBackground(NoBackground.NO_BACKGROUND);
