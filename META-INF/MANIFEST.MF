@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Application-Id: FruitNinja
+Application-Version: 0.1.0
+Application-PrintableName: FruitNinja
+Application-Description: FruitNinja
+Application-Activities: moc.esgi.MainActivity
+
