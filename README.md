@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!--
 	Markdown
 -->
@@ -21,3 +22,6 @@ N/A
 
 ## Restrictions
 None.
+=======
+# MicroEj
+>>>>>>> 610ba85acb34fb78a1c9ebfb5c7f07c7f7d9b931
