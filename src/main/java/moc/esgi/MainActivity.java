@@ -2,6 +2,7 @@ package moc.esgi;
 
 import ej.microui.MicroUI;
 import ej.microui.display.Colors;
+import ej.microui.display.Display;
 import ej.microui.display.GraphicsContext;
 import ej.mwt.Desktop;
 import ej.mwt.Panel;
@@ -20,6 +21,7 @@ import ej.widget.navigation.transition.HorizontalTransitionManager;
 public class MainActivity implements Activity {
 	
 	public static SimpleNavigator nav = new SimpleNavigator();
+	Menu myP;
 
 	@Override
 	public String getID() {
@@ -43,23 +45,24 @@ public class MainActivity implements Activity {
 	public void onStart() {
 		// TODO Auto-generated method stub
 		MicroUI.start();
-		nav.setTransitionManager(new HorizontalTransitionManager());
+		myP = new Menu(Display.getDefaultDisplay());
+		myP.show();
+		/*nav.setTransitionManager(new HorizontalTransitionManager());
 		nav.show(MainPage.class.getName(), true);
 		
 		Desktop desk = new Desktop();
 		Panel mainPanel = new Panel();
 		
-		/*HistorizedNavigator nav = new HistorizedNavigator();
-		nav.show(new MainPage());*/
+		
 		mainPanel.setWidget(nav);
-		mainPanel.show(desk, /* fill */true); // fit to desktop size and will be declared as not be packed
+		mainPanel.show(desk,true); // fit to desktop size and will be declared as not be packed
 		// set specific style
 		SimpleOutline line = new SimpleOutline(12);
-		//RelativeDimension dim = new RelativeDimension(30,30);
+
 		
 		Stylesheet sts = StyleHelper.getStylesheet();
 		EditableStyle myStyle = new EditableStyle();
-		//myStyle.setDimension(dim);
+	
 		myStyle.setAlignment(GraphicsContext.HCENTER | GraphicsContext.VCENTER);
 		myStyle.setForegroundColor(Colors.WHITE);
 		myStyle.setBackgroundColor(Colors.BLACK);
@@ -70,7 +73,7 @@ public class MainActivity implements Activity {
 		myStyle.setBorder(border);
 		myStyle.setBorderColor(Colors.WHITE);
 		sts.addRule(new TypeSelector(Label.class), myStyle);
-	    desk.show();
+	    desk.show();*/
 		
 	}
 

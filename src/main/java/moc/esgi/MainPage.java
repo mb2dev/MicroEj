@@ -19,6 +19,7 @@ import ej.style.util.EditableStyle;
 import ej.style.util.StyleHelper;
 import ej.widget.basic.Label;
 import ej.widget.composed.Button;
+import ej.widget.container.Canvas;
 import ej.widget.container.Grid;
 import ej.widget.container.List;
 import ej.widget.container.Scroll;
@@ -32,7 +33,8 @@ public class MainPage extends Page  {
 	Split mySplit;
 	List myList;
 	Scroll scroll;
-	Grid grid;
+    Canvas canvas;
+
 	
 
 	public MainPage() {
@@ -43,11 +45,11 @@ public class MainPage extends Page  {
 		myList=new List();
 		myList.setHorizontal(false);
 		scroll = new Scroll(false,true);
-		grid = new Grid();
+		canvas = new Canvas();
 		
 		try {
 			EditableStyle gridStyle = new EditableStyle();
-			TypeSelector gridSe1 = new TypeSelector(Grid.class);
+			TypeSelector gridSe1 = new TypeSelector(Canvas.class);
 			SimpleImageBackground myBackground = new SimpleImageBackground(Image.createImage("/images/fruit_background.png"),
 					GraphicsContext.HCENTER | GraphicsContext.VCENTER ,true);
 			
@@ -74,6 +76,10 @@ public class MainPage extends Page  {
 			TypeSelector lblSel = new TypeSelector(Label.class);
 			//ChildCombinator parentBtnSel = new ChildCombinator(btnSe1, lblSel); // button>label
 			//StyleHelper.getStylesheet().addRule(parentBtnSel, transp);
+			Display display = Display.getDefaultDisplay();
+
+	
+		
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -109,7 +115,7 @@ public class MainPage extends Page  {
 		//this.setWidget(mySplit);
 		
 		scroll.setWidget(myList);
-		this.setWidget(grid);
+		this.setWidget(canvas);
 	}
 
 
