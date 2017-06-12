@@ -74,4 +74,5 @@ public class Body {
 	public void addForce(Force f){
 		forces.add(f);
 	}
+	
 }

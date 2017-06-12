@@ -3,6 +3,7 @@ package moc.esgi;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 import ej.bon.Timer;
 import ej.bon.TimerTask;
@@ -19,6 +20,8 @@ import ej.microui.util.EventHandler;
 
 public class MyDisplayable extends Displayable implements EventHandler {
 
+	private final static Random rdm = new Random();
+	
 	int dimH;
 	int dimV;
 	
@@ -81,36 +84,18 @@ public class MyDisplayable extends Displayable implements EventHandler {
 				//System.out.println("update UI");
 				
 				// For safe remove : https://stackoverflow.com/questions/1196586/calling-remove-in-foreach-loop-in-java
-				Iterator<Fruit> i = fruits.iterator();
 				
-				while (i.hasNext()) {
-					Fruit f = i.next();
-					f.update();
-					if(f.toDelete()){
-						//System.out.println("deleting "+f.toString());
-						i.remove();
-					}
-				}
-				
-				
-				if((periodCounter % modulo) == 0){
-					try{
-						fruits.add(new Fruit(dimH, dimV));
-					}catch(IOException e){
-						throw new AssertionError(e);
-					}
-				}
 				
 				//fruits.
 				repaint();
-				periodCounter++;
+				
 			}
-		}, 0, 30);
+		}, 0, 100);
 	}
 
 	@Override
 	public boolean handleEvent(int event) {
-		/*if(Event.getType(event) == Event.POINTER){
+		if(Event.getType(event) == Event.POINTER){
 			if(Pointer.isPressed(event))
 			{
 				click = true;
@@ -126,7 +111,7 @@ public class MyDisplayable extends Displayable implements EventHandler {
 			bounce = false;
 			click = false;
 			repaint();
-		}*/
+		}
 		return false;
 	}
 
@@ -134,39 +119,53 @@ public class MyDisplayable extends Displayable implements EventHandler {
 	@Override
 	public void paint(GraphicsContext gc) {
 		
-		//System.out.println("fruits.size = " + fruits.size());
-		if(click){
-			
-			gc.setColor(Colors.WHITE);
-			gc.fillRect(0, 0, dimH, dimV);
-			
-			//g.drawImage(microejImage, pX, pY, GraphicsContext.HCENTER | GraphicsContext.VCENTER);
-			click = false;
-			bounce = true;
-			
-		}else if(bounce){
-			gc.setColor(Colors.WHITE);
-			gc.fillRect(0, 0, dimH, dimV);
-			//g.drawImage(microejImage, imgX, imgY, GraphicsContext.HCENTER | GraphicsContext.VCENTER);
-		}else{
-			// background
-			//g.setColor(Colors.WHITE);
-			gc.drawImage(fruitNinjaBackground, 0, 0, 0);
-			//g.fillRect(0, 0, dimH, dimV);
+		Iterator<Fruit> i = fruits.iterator();
+		
+		ArrayList<Fruit> parts = new ArrayList<Fruit>();
+		while (i.hasNext()) {
+			Fruit f = i.next();
+			f.update();
+			if(f.toDelete()){
+				System.out.println("deleting "+f.toString());
+				i.remove();
+			}
+			if(click){
+				if(f.intersect(pX, pY) && !f.isPart){
+					i.remove();
+					parts = f.breakFruit();
+					click = false;
+				}
+				
+			}
 		}
-		for(Fruit f : fruits){
-			//System.out.println("drawing fruit with X = "+(int)f.pos[0]+" & Y = "+(int)f.pos[1]);
+		fruits.addAll(parts);
+		
+		
+		if((periodCounter % modulo) == 0){
+			// on change la valeur du modulo pour que les fruits
+			// apparaissent de façon irrégulière
+			modulo = rdm.nextInt(33) + 10;
+			try{
+				fruits.add(new Fruit(dimH, dimV));
+			}catch(IOException e){
+				throw new AssertionError(e);
+			}
+		}
+		
+		//System.out.println("fruits.size = " + fruits.size());
+
+		gc.drawImage(fruitNinjaBackground, 0, 0, 0);
+		
+		Iterator<Fruit> j = fruits.iterator();
+		while (j.hasNext()) {
+			Fruit f = j.next();
 			ImageRotation rotation = new ImageRotation();
-//			int imageWidth = f.img.getWidth();
-//			int imageHeight = f.img.getHeight();
-//			int rx = x + imageWidth / 2;
-//			int ry = y + imageHeight / 2;
 			rotation.setRotationCenter((int)f.pos[0], (int)f.pos[1]);
 			rotation.setAngle((int)f.pos[2] % 360);
 			rotation.drawNearestNeighbor(gc, f.img, (int)f.pos[0], (int)f.pos[1], GraphicsContext.HCENTER | GraphicsContext.VCENTER);
 			//gc.drawImage(f.img, (int)f.pos[0], (int)f.pos[1], GraphicsContext.HCENTER | GraphicsContext.VCENTER);
 		}
-		
+		periodCounter++;
 	}
 
 	@Override
