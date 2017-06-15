@@ -144,6 +144,8 @@ public class Fruit extends Body {
 	
 	public int getWidth(){ return this.img.getWidth(); }
 	public int getHeight(){ return this.img.getHeight(); }
+	public int getX(){ return (int)this.pos[0]; }
+	public int getY(){ return (int)this.pos[1]; }
 
 	public boolean intersect(int x, int y){
 		return x < this.pos[0] + this.getWidth()/2 

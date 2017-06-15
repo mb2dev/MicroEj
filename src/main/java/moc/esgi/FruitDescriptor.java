@@ -16,7 +16,7 @@ public class FruitDescriptor {
 			img = Image.createImage(name);
 			images.put(name, img);
 		}else{
-			System.out.println("recycling image");
+			//System.out.println("recycling image");
 		}
 		return img;
 	}

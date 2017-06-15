@@ -2,6 +2,7 @@ package moc.esgi;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -27,6 +28,8 @@ public class MyDisplayable extends Displayable implements EventHandler {
 	
 	boolean click = false;
 	
+	int imgX = 0;
+	int imgY = 0;
 	int pY = 0;
 	int pX = 0;
 	int periodCounter = 0;
@@ -37,25 +40,27 @@ public class MyDisplayable extends Displayable implements EventHandler {
 	int dX;
 	int dY;
 	
-	private Image fruitNinjaBackground;
-	private ArrayList<Fruit> fruits;
-	
-	int imgX = 0;
-	int imgY = 0;
+	int score = 0;
 	
 	private final Font font = Font.getFont(Font.LATIN, 26, Font.STYLE_PLAIN);
+	private final Image fruitNinjaBackground;
+	private final Image scoreMelon;
+	private ArrayList<Fruit> fruits;
+	private ArrayList<FNPoints> labels;
 	
 	public MyDisplayable() {
 		super(Display.getDefaultDisplay());
 		dimV = Display.getDefaultDisplay().getHeight();
 		dimH = Display.getDefaultDisplay().getWidth();
 		try{
+			scoreMelon = Image.createImage("/images/Fruits/Menu/score_melon_xs.png");
 			fruitNinjaBackground = Image.createImage("/images/fruit_background.png");
 		}
 		catch(IOException e){
 			throw new AssertionError(e);
 		}
 		
+		labels = new ArrayList<FNPoints>();
 		fruits = new ArrayList<Fruit>();
 		
 		bounce = false;
@@ -104,13 +109,9 @@ public class MyDisplayable extends Displayable implements EventHandler {
 				imgX = pX = ptr.getX();
 				imgY = pY = ptr.getY();
 				repaint();
-			}else
-				bounce = true;
+				return true;
+			}
 			
-		}else{ // button
-			bounce = false;
-			click = false;
-			repaint();
 		}
 		return false;
 	}
@@ -119,29 +120,52 @@ public class MyDisplayable extends Displayable implements EventHandler {
 	@Override
 	public void paint(GraphicsContext gc) {
 		
+		gc.drawImage(fruitNinjaBackground, 0, 0, 0);
+		gc.drawImage(scoreMelon, 0, 0, 0);
+		gc.setColor(0xfae74c);
+		gc.setFont(font);
+		
 		Iterator<Fruit> i = fruits.iterator();
 		
 		ArrayList<Fruit> parts = new ArrayList<Fruit>();
 		while (i.hasNext()) {
 			Fruit f = i.next();
-			f.update();
-			if(f.toDelete()){
-				System.out.println("deleting "+f.toString());
-				i.remove();
-			}
-			if(click){
-				if(f.intersect(pX, pY) && !f.isPart){
+			if(!click)
+			{
+				f.update();
+				if(f.toDelete()){
+					//System.out.println("deleting "+f.toString());
 					i.remove();
-					parts = f.breakFruit();
-					click = false;
 				}
+			}
+			else
+			{
+				if(f.intersect(pX, pY) && !f.isPart){
+					click = false;
+					i.remove();
+					score += f.value;
 				
+					/**
+					 * Conflit avec un repaint parallèle
+					 * cf. iterator in labels plus bas
+					 * 
+					 * ConcurrentModificationException
+					 */
+					labels.add(
+							new FNPoints(
+									new String("+"+f.value), 
+									new Position(f.getX(), f.getY())
+							)
+					);
+					parts = f.breakFruit();
+					fruits.addAll(parts);
+				}
 			}
 		}
-		fruits.addAll(parts);
 		
 		
-		if((periodCounter % modulo) == 0){
+		
+		if((periodCounter % modulo) == 0 && fruits.size() < 8){
 			// on change la valeur du modulo pour que les fruits
 			// apparaissent de façon irrégulière
 			modulo = rdm.nextInt(33) + 10;
@@ -153,8 +177,9 @@ public class MyDisplayable extends Displayable implements EventHandler {
 		}
 		
 		//System.out.println("fruits.size = " + fruits.size());
+		String str = new String(""+score);
+		gc.drawString(str, scoreMelon.getWidth()+10, scoreMelon.getHeight()/4, 0);
 
-		gc.drawImage(fruitNinjaBackground, 0, 0, 0);
 		
 		Iterator<Fruit> j = fruits.iterator();
 		while (j.hasNext()) {
@@ -165,6 +190,16 @@ public class MyDisplayable extends Displayable implements EventHandler {
 			rotation.drawNearestNeighbor(gc, f.img, (int)f.pos[0], (int)f.pos[1], GraphicsContext.HCENTER | GraphicsContext.VCENTER);
 			//gc.drawImage(f.img, (int)f.pos[0], (int)f.pos[1], GraphicsContext.HCENTER | GraphicsContext.VCENTER);
 		}
+		
+		Iterator<FNPoints> it = labels.iterator();
+		while(it.hasNext()){
+			FNPoints p = it.next();
+			gc.drawString(p.display(), p.pos.X++, p.pos.Y--, 0);
+			if(p.toDelete()){
+				it.remove();
+			}
+		}
+		
 		periodCounter++;
 	}
 
