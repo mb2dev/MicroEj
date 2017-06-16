@@ -29,21 +29,21 @@ public class Fruit extends Body {
 	
 	private final static Random rdm = new Random();
 	public final static FruitDescriptor[] fruits = new FruitDescriptor[] {
-			new FruitDescriptor("/images/Fruits/Banana_xs.png", 10),
+			new FruitDescriptor("/images/Fruits/Banana_xs.png", 25),
 			new FruitDescriptor("/images/Fruits/Coconut_xs.png", 10),
-			new FruitDescriptor("/images/Fruits/Green_Apple_xs.png", 10),
-			new FruitDescriptor("/images/Fruits/Kiwi_Fruit_xs.png", 10),
-			new FruitDescriptor("/images/Fruits/Lemon_xs.png", 10),
-			new FruitDescriptor("/images/Fruits/Lime_xs.png", 10),
-			new FruitDescriptor("/images/Fruits/Mango_xs.png", 10),
+			new FruitDescriptor("/images/Fruits/Green_Apple_xs.png", 15),
+			new FruitDescriptor("/images/Fruits/Kiwi_Fruit_xs.png", 5),
+			new FruitDescriptor("/images/Fruits/Lemon_xs.png", 12),
+			new FruitDescriptor("/images/Fruits/Lime_xs.png", 8),
+			new FruitDescriptor("/images/Fruits/Mango_xs.png", 4),
 //			new FruitDescriptor("/images/Fruits/Orange_xs.png", 10),
 //			new FruitDescriptor("/images/Fruits/PassionFruit_xs.png", 10),
 //			new FruitDescriptor("/images/Fruits/Peach_xs.png", 10),
 //			new FruitDescriptor("/images/Fruits/Pineapple_xs.png", 10),
 //			new FruitDescriptor("/images/Fruits/Plum_xs.png", 10),
 //			new FruitDescriptor("/images/Fruits/Red_Apple_xs.png", 10),
-			new FruitDescriptor("/images/Fruits/Strawberry_xs.png", 10),
-			new FruitDescriptor("/images/Fruits/Tomato_xs.png", 10),
+			new FruitDescriptor("/images/Fruits/Strawberry_xs.png", 40),
+			new FruitDescriptor("/images/Fruits/Tomato_xs.png", 32),
 //			new FruitDescriptor("/images/Fruits/Watermelon_xs.png", 10)
 	};
 	

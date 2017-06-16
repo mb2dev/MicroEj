@@ -2,6 +2,7 @@ package moc.esgi;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
@@ -22,6 +23,8 @@ import ej.microui.util.EventHandler;
 public class MyDisplayable extends Displayable implements EventHandler {
 
 	private final static Random rdm = new Random();
+	private final static int GAME_LENGTH = 10;
+	private final static int DELAY = 3;
 	
 	int dimH;
 	int dimV;
@@ -41,6 +44,8 @@ public class MyDisplayable extends Displayable implements EventHandler {
 	int dY;
 	
 	int score = 0;
+	int second_counter = GAME_LENGTH;
+	boolean stop = false;
 	
 	private final Font font = Font.getFont(Font.LATIN, 26, Font.STYLE_PLAIN);
 	private final Image fruitNinjaBackground;
@@ -53,7 +58,7 @@ public class MyDisplayable extends Displayable implements EventHandler {
 		dimV = Display.getDefaultDisplay().getHeight();
 		dimH = Display.getDefaultDisplay().getWidth();
 		try{
-			scoreMelon = Image.createImage("/images/Fruits/Menu/score_melon_xs.png");
+			scoreMelon = Image.createImage("/images/Fruits/Menu/score_melon_xxs.png");
 			fruitNinjaBackground = Image.createImage("/images/fruit_background.png");
 		}
 		catch(IOException e){
@@ -66,36 +71,31 @@ public class MyDisplayable extends Displayable implements EventHandler {
 		bounce = false;
 		dX = 3;
 		dY = 3;
+		
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask(){
+			@Override
+			public void run(){
+				second_counter--;
+			}
+		}, 0, 1000);
+		
+		resetTimer();
+	}
+	
+	void resetTimer(){
 		Timer t = new Timer();
 		t.schedule(new TimerTask(){
 			@Override
 			public void run(){
-				/*if(bounce){
-					if(imgX + fruitNinjaBackground.getWidth()/2 > dimH)
-						dX = -Math.abs(dX);
-					
-					if(imgX - fruitNinjaBackground.getWidth()/2 < 0)
-						dX = Math.abs(dX);
-					
-					if(imgY + fruitNinjaBackground.getHeight()/2 > dimV)
-						dY = -Math.abs(dY);
-					if(imgY - fruitNinjaBackground.getHeight()/2 < 0)
-						dY = Math.abs(dY);
-					
-					imgX += dX;
-					imgY += dY;
-					repaint();
-				}*/
-				//System.out.println("update UI");
-				
-				// For safe remove : https://stackoverflow.com/questions/1196586/calling-remove-in-foreach-loop-in-java
-				
-				
-				//fruits.
+				if(isStopped()){
+					t.cancel();
+				}
+				//fruits
 				repaint();
 				
 			}
-		}, 0, 100);
+		}, 0, 50);
 	}
 
 	@Override
@@ -104,11 +104,16 @@ public class MyDisplayable extends Displayable implements EventHandler {
 			if(Pointer.isPressed(event))
 			{
 				click = true;
-				bounce = false;
 				Pointer ptr = (Pointer)Event.getGenerator(event);
 				imgX = pX = ptr.getX();
 				imgY = pY = ptr.getY();
 				repaint();
+				return true;
+			}
+			if(Pointer.isDoubleClicked(event) && isStopped()){
+				second_counter = GAME_LENGTH;
+				score = 0;
+				resetTimer();
 				return true;
 			}
 			
@@ -116,6 +121,10 @@ public class MyDisplayable extends Displayable implements EventHandler {
 		return false;
 	}
 
+	public boolean isStopped(){
+		return second_counter <= -DELAY;
+	}
+	
 	// Appelée au démarrage et lors d'un repaint
 	@Override
 	public void paint(GraphicsContext gc) {
@@ -125,6 +134,68 @@ public class MyDisplayable extends Displayable implements EventHandler {
 		gc.setColor(0xfae74c);
 		gc.setFont(font);
 		
+		
+		if(!isStopped()){
+			updateFruits(gc);
+			generateFruits();
+			
+			drawFruits(gc);
+			drawPoints(gc);
+		}else{
+			gc.drawString("SCORE : "+score, dimH/2, dimV/2, GraphicsContext.HCENTER | GraphicsContext.VCENTER);
+		}
+		updateInfo(gc);
+	}
+	
+	void drawPoints(GraphicsContext gc){
+		Iterator<FNPoints> it = labels.iterator();
+		while(it.hasNext()){
+			FNPoints p = it.next();
+			gc.drawString(p.display(), p.pos.X++, p.pos.Y--, 0);
+			if(p.toDelete()){
+				it.remove();
+			}
+		}
+	}
+	
+	void drawFruits(GraphicsContext gc){
+		Iterator<Fruit> j = fruits.iterator();
+		while (j.hasNext()) {
+			Fruit f = j.next();
+			ImageRotation rotation = new ImageRotation();
+			rotation.setRotationCenter((int)f.pos[0], (int)f.pos[1]);
+			rotation.setAngle((int)f.pos[2] % 360);
+			rotation.drawNearestNeighbor(gc, f.img, (int)f.pos[0], (int)f.pos[1], GraphicsContext.HCENTER | GraphicsContext.VCENTER);
+			//gc.drawImage(f.img, (int)f.pos[0], (int)f.pos[1], GraphicsContext.HCENTER | GraphicsContext.VCENTER);
+		}
+	}
+	
+	void updateInfo(GraphicsContext gc){
+		//System.out.println("fruits.size = " + fruits.size());
+		String score_str = new String(""+score);
+		gc.drawString(score_str, scoreMelon.getWidth()+10, scoreMelon.getHeight()/4, 0);
+		
+		int min = Math.max(0, second_counter / 60);
+		int sec = Math.max(0, second_counter % 60);
+		String timer_str = new String(min + " : " + (sec < 10 ? "0"+sec : sec));
+		gc.drawString(timer_str, dimH-10, 0, GraphicsContext.RIGHT);
+	}
+	
+	void generateFruits(){
+		if((periodCounter % modulo) == 0 && fruits.size() < 8 && second_counter > 0){
+			// on change la valeur du modulo pour que les fruits
+			// apparaissent de façon irrégulière
+			modulo = rdm.nextInt(33) + 10;
+			try{
+				fruits.add(new Fruit(dimH, dimV));
+			}catch(IOException e){
+				throw new AssertionError(e);
+			}
+		}
+		periodCounter++;
+	}
+	
+	void updateFruits(GraphicsContext gc){
 		Iterator<Fruit> i = fruits.iterator();
 		
 		ArrayList<Fruit> parts = new ArrayList<Fruit>();
@@ -158,49 +229,11 @@ public class MyDisplayable extends Displayable implements EventHandler {
 							)
 					);
 					parts = f.breakFruit();
-					fruits.addAll(parts);
 				}
 			}
 		}
-		
-		
-		
-		if((periodCounter % modulo) == 0 && fruits.size() < 8){
-			// on change la valeur du modulo pour que les fruits
-			// apparaissent de façon irrégulière
-			modulo = rdm.nextInt(33) + 10;
-			try{
-				fruits.add(new Fruit(dimH, dimV));
-			}catch(IOException e){
-				throw new AssertionError(e);
-			}
-		}
-		
-		//System.out.println("fruits.size = " + fruits.size());
-		String str = new String(""+score);
-		gc.drawString(str, scoreMelon.getWidth()+10, scoreMelon.getHeight()/4, 0);
-
-		
-		Iterator<Fruit> j = fruits.iterator();
-		while (j.hasNext()) {
-			Fruit f = j.next();
-			ImageRotation rotation = new ImageRotation();
-			rotation.setRotationCenter((int)f.pos[0], (int)f.pos[1]);
-			rotation.setAngle((int)f.pos[2] % 360);
-			rotation.drawNearestNeighbor(gc, f.img, (int)f.pos[0], (int)f.pos[1], GraphicsContext.HCENTER | GraphicsContext.VCENTER);
-			//gc.drawImage(f.img, (int)f.pos[0], (int)f.pos[1], GraphicsContext.HCENTER | GraphicsContext.VCENTER);
-		}
-		
-		Iterator<FNPoints> it = labels.iterator();
-		while(it.hasNext()){
-			FNPoints p = it.next();
-			gc.drawString(p.display(), p.pos.X++, p.pos.Y--, 0);
-			if(p.toDelete()){
-				it.remove();
-			}
-		}
-		
-		periodCounter++;
+		click = click ? false : click;
+		fruits.addAll(parts);
 	}
 
 	@Override
