@@ -1,0 +1,25 @@
+!SESSION 2017-06-30 14:17:03.847 -----------------------------------------------
+eclipse.buildId=4.5.2.M20160212-1500
+java.version=1.8.0_73
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=fr_FR
+Framework arguments:  -keyring /Users/Mickael/.eclipse_keyring -showlocation
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -keyring /Users/Mickael/.eclipse_keyring -showlocation
+
+!ENTRY org.eclipse.core.net 1 0 2017-06-30 14:17:19.004
+!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
+
+!ENTRY com.is2t.microej.mpp 1 0 2017-06-30 14:17:23.458
+!MESSAGE Ivy settings file already exists.
+
+!ENTRY org.apache.ivyde.eclipse 1 0 2017-06-30 14:17:23.463
+!MESSAGE starting IvyDE plugin
+
+!ENTRY org.apache.ivyde.eclipse 1 0 2017-06-30 14:17:23.483
+!MESSAGE IvyDE plugin started
+
+!ENTRY com.is2t.microej.mpp 1 0 2017-06-30 14:17:29.415
+!MESSAGE Closing welcome introduction
+
+!ENTRY com.is2t.microej.mpp 1 0 2017-06-30 14:17:29.540
+!MESSAGE Displaying 'http://developer.microej.com/4.0/studio/welcome/' in MicroEJWebBrowserEditor

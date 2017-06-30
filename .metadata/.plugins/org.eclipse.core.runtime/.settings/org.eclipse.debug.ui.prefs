@@ -1,0 +1,6 @@
+Console.limitConsoleOutput=false
+eclipse.preferences.version=1
+org.eclipse.debug.ui.PREF_FILTER_LAUNCH_TYPES=true
+org.eclipse.debug.ui.PREF_FILTER_TYPE_LIST=org.eclipse.ant.AntBuilderLaunchConfigurationType,org.eclipse.cdt.launch.attachLaunchType,org.eclipse.cdt.launch.postmortemLaunchType,org.eclipse.cdt.launch.remoteApplicationLaunchType,org.eclipse.ui.externaltools.ProgramBuilderLaunchConfigurationType,org.eclipse.jdt.launching.localJavaApplication,org.eclipse.jdt.launching.javaApplet,org.eclipse.pde.api.tools.usescan,org.eclipse.pde.ui.RuntimeWorkbench,org.eclipse.pde.ui.JunitLaunchConfig,org.eclipse.pde.ui.EquinoxLauncher
+org.eclipse.debug.ui.PREF_LAUNCH_PERSPECTIVES=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\n<launchPerspectives/>\n
+org.eclipse.debug.ui.UseContextualLaunch=false

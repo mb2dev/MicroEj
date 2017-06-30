@@ -1,0 +1,6 @@
+PROBLEMS_FILTERS_MIGRATE=true
+eclipse.preferences.version=1
+org.eclipse.ui.internal.views.markers.CachedMarkerBuilderorg.eclipse.ui.views.ProblemView=<?xml version\="1.0" encoding\="UTF-8"?><filterGroups><filterGroup IMemento.internal.id\="com.is2t.microej.rcp.filter" name\="MicroEJ Default" enabled\="true" scope\="2"><fieldFilter IMemento.internal.id\="org.eclipse.ui.ide.severityAndDescriptionField" containsModifier\="CONTAINS" containsText\="" selectedSeverities\="6"/></filterGroup></filterGroups>
+platformState=1488438562597
+quickStart=true
+tipsAndTricks=true
