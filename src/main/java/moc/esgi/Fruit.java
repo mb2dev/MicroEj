@@ -9,6 +9,8 @@ import ej.microui.display.Image;
 
 public class Fruit extends Body {
 	
+	private final static int MARGE = 20;
+	
 	Image img;
 	String name;
 	int value;
@@ -21,6 +23,9 @@ public class Fruit extends Body {
 	// Scene dimensions
 	int dimH;
 	int dimV;
+	
+	Position pa;
+	Position pb;
 	
 	//private static final Pattern r = Pattern.compile("/images/Fruits/(.*).png");
 	private static String extractName(String path){
@@ -105,10 +110,20 @@ public class Fruit extends Body {
 		}
 		
 		try{
+			float[] pos_clone = new float[]{
+				this.pos[0],
+				this.pos[1],
+				this.pos[2]
+			};
+			float[] vel_clone = new float[]{
+					this.velocity[0],
+					this.velocity[1],
+					this.velocity[2]
+			};
 			Fruit pR = new Fruit(
 					FruitDescriptor.createImage("/images/Fruits/"+this.name+"_R.png"), 
-					this.pos.clone(), 
-					this.velocity.clone(), 
+					pos_clone, 
+					vel_clone, 
 					0
 			);
 			pR.isPart = true;
@@ -117,10 +132,20 @@ public class Fruit extends Body {
 			pR.addForce(new Push(new float[]{500, -50, 250}));
 			parts.add(pR);
 			
+			pos_clone = new float[]{
+				this.pos[0],
+				this.pos[1],
+				this.pos[2]
+			};
+			vel_clone = new float[]{
+					this.velocity[0],
+					this.velocity[1],
+					this.velocity[2]
+			};
 			Fruit pL = new Fruit(
 					FruitDescriptor.createImage("/images/Fruits/"+this.name+"_L.png"), 
-					this.pos.clone(), 
-					this.velocity.clone(), 
+					pos_clone, 
+					vel_clone, 
 					0
 			);
 			pL.isPart = true;
@@ -152,6 +177,34 @@ public class Fruit extends Body {
 				&& x > this.pos[0] - this.getWidth()/2
 				&& y < this.pos[1] + this.getHeight()/2
 				&& y > this.pos[1] - this.getHeight()/2;
+	}
+	
+	public boolean intersect(ArrayList<Position> list){
+		//System.out.println("list length =" +list.size() );
+		for(int i = 0; i < list.size()-1; i++){
+			int m_y = (int)this.pos[1];
+			int m_x = (int)this.pos[0];
+			
+			pa = list.get(i);
+			pb = list.get(i+1);
+			int x_left = (pa.X > pb.X ? pb.X : pa.X) - MARGE;
+		    int x_right = (pa.X > pb.X ? pa.X : pb.X) + MARGE;
+			int y_top = (pa.Y > pb.Y ? pb.Y : pa.Y) - MARGE;
+			int y_bottom = (pa.Y > pb.Y ? pa.Y : pb.Y) + MARGE;
+			
+			if(m_x >= x_left && m_x <= x_right && m_y >= y_top && m_y < y_bottom){
+				//System.out.println("inbox");
+//				double a = (double)pb.X / (double)pa.X;
+//				double b = (double)pb.Y / (double)pa.Y;
+//				double y = a*this.pos[0]+b;
+//				//System.out.println(y + " == " + m_y + " ?");
+//				if(Math.abs(m_y - y) < 50){
+//					return true;
+//				}
+				return true;
+			}
+		}
+		return false; 
 	}
 	
 	@Override
