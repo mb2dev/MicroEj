@@ -1,12 +1,15 @@
 package moc.esgi;
 
-import moc.esgi.MyDisplayable;
 import ej.microui.MicroUI;
+import ej.mwt.Desktop;
+import ej.mwt.Panel;
 import ej.wadapps.app.Activity;
+import ej.widget.navigation.navigator.SimpleNavigator;
+import ej.widget.navigation.transition.HorizontalTransitionManager;
 
 public class MainActivity implements Activity {
 	
-	private MyDisplayable displayable;
+	public static SimpleNavigator nav = new SimpleNavigator();
 
 	@Override
 	public String getID() {
@@ -30,9 +33,15 @@ public class MainActivity implements Activity {
 	public void onStart() {
 		// TODO Auto-generated method stub
 		MicroUI.start();
-		displayable = new MyDisplayable();
-		displayable.show();
+		nav.setTransitionManager(new HorizontalTransitionManager());
+		nav.show(MenuPage.class.getName(), false);
 		
+		Desktop desk = new Desktop();
+		Panel mainPanel = new Panel();
+		
+		mainPanel.setWidget(nav);
+		mainPanel.show(desk, true);
+		desk.show();
 	}
 
 	@Override

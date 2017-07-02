@@ -19,6 +19,7 @@ import ej.style.util.EditableStyle;
 import ej.style.util.StyleHelper;
 import ej.widget.basic.Label;
 import ej.widget.composed.Button;
+import ej.widget.container.Dock;
 import ej.widget.container.Grid;
 import ej.widget.container.List;
 import ej.widget.container.Scroll;
@@ -33,7 +34,7 @@ public class MainPage extends Page  {
 	List myList;
 	Scroll scroll;
 	Grid grid;
-	
+	private MyDisplayable displayable;
 
 	public MainPage() {
 		// TODO Auto-generated constructor stub
@@ -51,7 +52,7 @@ public class MainPage extends Page  {
 			SimpleImageBackground myBackground = new SimpleImageBackground(Image.createImage("/images/fruit_background.png"),
 					GraphicsContext.HCENTER | GraphicsContext.VCENTER ,true);
 			
-			gridStyle.setBackground(myBackground);
+			//gridStyle.setBackground(myBackground);
 			StyleHelper.getStylesheet().addRule(gridSe1, gridStyle);
 			//SimpleOutline myPadding = new SimpleOutline(12);// image integrity
 			//lb1Style.setPadding(myPadding);
@@ -95,16 +96,17 @@ public class MainPage extends Page  {
 			@Override
 			  public void onClick()
 			  {
-			    //use the ExitHandler to stop application
+			   //use the ExitHandler to stop application
 			System.out.println("Exit"); 
-			ExitHandler exitHandler = ServiceLoaderFactory.getServiceLoader().getService(ExitHandler.class); if (exitHandler != null)
+			ExitHandler exitHandler = ServiceLoaderFactory.getServiceLoader().getService(ExitHandler.class); 
+			if (exitHandler != null)
 			{
 			       exitHandler.exit();
 			    }
 			} });
-		//this.setWidget(mySplit);
-		
 		scroll.setWidget(myList);
+		grid.add(new MyDisplayable());
+		
 		this.setWidget(grid);
 	}
 
