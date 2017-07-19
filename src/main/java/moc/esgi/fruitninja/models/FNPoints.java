@@ -1,4 +1,4 @@
-package moc.esgi;
+package moc.esgi.fruitninja.models;
 
 public class FNPoints {
 	String label;
@@ -13,5 +13,10 @@ public class FNPoints {
 	}
 	
 	public String display(){ lifecounter++; return label; }
-	public boolean toDelete(){ return lifecounter >= lifespan; } 
+	public boolean toDelete(){ return lifecounter >= lifespan; }
+
+	public Position getPos() {
+		return pos;
+	} 
+	
 }

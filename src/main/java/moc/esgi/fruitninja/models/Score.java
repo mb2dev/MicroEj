@@ -1,4 +1,4 @@
-package moc.esgi;
+package moc.esgi.fruitninja.models;
 
 import java.util.ArrayList;
 import java.util.Collections;

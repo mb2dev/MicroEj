@@ -1,4 +1,4 @@
-package moc.esgi;
+package moc.esgi.fruitninja.models;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -6,6 +6,9 @@ import java.util.Arrays;
 import java.util.Random;
 
 import ej.microui.display.Image;
+import moc.esgi.fruitninja.dynamic.Body;
+import moc.esgi.fruitninja.dynamic.Force;
+import moc.esgi.fruitninja.dynamic.Push;
 
 public class Fruit extends Body {
 	
@@ -14,12 +17,20 @@ public class Fruit extends Body {
 	Image img;
 	String name;
 	int value;
-	boolean isPart = false;
+	public boolean isPart = false;
 	
-	//Object dimensions
-	/*int height;
-	int width;*/
+	public float[] getPos(){
+		return this.pos;
+	}
 	
+	public Image getImg() {
+		return img;
+	}
+	
+	public int getValue() {
+		return value;
+	}
+
 	// Scene dimensions
 	int dimH;
 	int dimV;

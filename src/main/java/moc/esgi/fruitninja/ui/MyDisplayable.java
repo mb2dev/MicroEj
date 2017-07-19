@@ -1,4 +1,4 @@
-package moc.esgi;
+package moc.esgi.fruitninja.ui;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,6 +23,12 @@ import ej.microui.util.EventHandler;
 import ej.mwt.Widget;
 import ej.style.Element;
 import ej.style.State;
+import moc.esgi.fruitninja.MainActivity;
+import moc.esgi.fruitninja.models.FNPoints;
+import moc.esgi.fruitninja.models.Fruit;
+import moc.esgi.fruitninja.models.FruitDescriptor;
+import moc.esgi.fruitninja.models.Position;
+import moc.esgi.fruitninja.models.Score;
 
 public class MyDisplayable extends Widget implements EventHandler, Element {
 
@@ -93,7 +99,7 @@ public class MyDisplayable extends Widget implements EventHandler, Element {
 	}
 	
 	void resetTimer(){
-		Timer t = new Timer();
+		final Timer t = new Timer();
 		t.schedule(new TimerTask(){
 			@Override
 			public void run(){
@@ -194,7 +200,10 @@ public class MyDisplayable extends Widget implements EventHandler, Element {
 		Iterator<FNPoints> it = labels.iterator();
 		while(it.hasNext()){
 			FNPoints p = it.next();
-			gc.drawString(p.display(), p.pos.X++, p.pos.Y--, 0);
+			Position pos = p.getPos();
+			pos.addToX(1);
+			pos.addToY(-1);
+			gc.drawString(p.display(), pos.getX(), pos.getY(), 0);
 			if(p.toDelete()){
 				it.remove();
 			}
@@ -206,10 +215,9 @@ public class MyDisplayable extends Widget implements EventHandler, Element {
 		while (j.hasNext()) {
 			Fruit f = j.next();
 			ImageRotation rotation = new ImageRotation();
-			rotation.setRotationCenter((int)f.pos[0], (int)f.pos[1]);
-			rotation.setAngle((int)f.pos[2] % 360);
-			rotation.drawNearestNeighbor(gc, f.img, (int)f.pos[0], (int)f.pos[1], GraphicsContext.HCENTER | GraphicsContext.VCENTER);
-			//gc.drawImage(f.img, (int)f.pos[0], (int)f.pos[1], GraphicsContext.HCENTER | GraphicsContext.VCENTER);
+			rotation.setRotationCenter((int)f.getPos()[0], (int)f.getPos()[1]);
+			rotation.setAngle((int)f.getPos()[2] % 360);
+			rotation.drawNearestNeighbor(gc, f.getImg(), (int)f.getPos()[0], (int)f.getPos()[1], GraphicsContext.HCENTER | GraphicsContext.VCENTER);
 		}
 	}
 	
@@ -246,9 +254,8 @@ public class MyDisplayable extends Widget implements EventHandler, Element {
 			Fruit f = i.next();
 				//System.out.println(f.pa.toString());
 			 if(f.intersect(list) && !f.isPart){
-				  
 					i.remove();
-					score += f.value;
+					score += f.getValue();
 				
 					/**
 					 * /!\ ConcurrentModificationException

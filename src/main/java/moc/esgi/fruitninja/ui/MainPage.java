@@ -1,4 +1,4 @@
-package moc.esgi;
+package moc.esgi.fruitninja.ui;
 
 import java.io.IOException;
 

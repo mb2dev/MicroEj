@@ -1,4 +1,4 @@
-package moc.esgi;
+package moc.esgi.fruitninja;
 
 import ej.microui.MicroUI;
 import ej.mwt.Desktop;
@@ -6,6 +6,7 @@ import ej.mwt.Panel;
 import ej.wadapps.app.Activity;
 import ej.widget.navigation.navigator.SimpleNavigator;
 import ej.widget.navigation.transition.HorizontalTransitionManager;
+import moc.esgi.fruitninja.ui.MenuPage;
 
 public class MainActivity implements Activity {
 	

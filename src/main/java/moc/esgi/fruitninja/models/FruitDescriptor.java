@@ -1,4 +1,4 @@
-package moc.esgi;
+package moc.esgi.fruitninja.models;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -29,7 +29,7 @@ public class FruitDescriptor {
 		this.imgPath = imgPath;
 	}
 	
-	static void InitFruitDescriptor(FruitDescriptor[] fruitList){
+	public static void InitFruitDescriptor(FruitDescriptor[] fruitList){
 		for(int i =0; i< fruitList.length; i++){
 			Image img;
 			try {

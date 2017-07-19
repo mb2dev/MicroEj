@@ -1,4 +1,4 @@
-package moc.esgi;
+package moc.esgi.fruitninja.dynamic;
 
 public class Push implements Force {
 

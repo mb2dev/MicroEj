@@ -1,7 +1,8 @@
-package moc.esgi;
+package moc.esgi.fruitninja.ui;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import ej.components.dependencyinjection.ServiceLoaderFactory;
 import ej.exit.ExitHandler;
@@ -17,12 +18,16 @@ import ej.microui.util.EventHandler;
 import ej.mwt.Widget;
 import ej.style.Element;
 import ej.style.State;
+import ej.widget.navigation.transition.HorizontalTransitionManager;
+import moc.esgi.fruitninja.MainActivity;
+import moc.esgi.fruitninja.models.Position;
 
 
-public class DisplayableScore  extends Widget implements EventHandler, Element {
+public class DisplayableMenu  extends Widget implements EventHandler, Element {
 	
 	private final Image fruitNinjaBackground;
-	private final Image bomb;
+	private final Image scoreMelon;
+	private final Image strawberry,watermelon,bomb;
 	public float rotationValue =0;
 	private final Font font = Font.getFont(Font.LATIN, 26, Font.STYLE_PLAIN);
 	float point_x, point_y;
@@ -38,14 +43,15 @@ public class DisplayableScore  extends Widget implements EventHandler, Element {
 	Position strawberryPosition = new Position(100,200);
 	Position watermelonPosition = new Position(250,100);
 	Position bombPosition = new Position(420,190);
-	int scoreX= 250;
-	int scoreY =50;
 	
 	
 	
-	public DisplayableScore(){
+	public DisplayableMenu(){
 		super();
 		try{
+			strawberry = Image.createImage("/images/Fruits/Strawberry_xs.png");
+			scoreMelon = Image.createImage("/images/Fruits/Menu/score_melon_xxs.png");
+			watermelon = Image.createImage("/images/Fruits/Watermelon_xs.png");
 			bomb =  Image.createImage("/images/Fruits/Bomb_xs.png");
 			fruitNinjaBackground = Image.createImage("/images/fruit_background.png");
 			
@@ -62,9 +68,24 @@ public class DisplayableScore  extends Widget implements EventHandler, Element {
 		ImageRotation rotation = new ImageRotation();
 		rotation.setRotationCenter(100, 200);
 		rotation.setAngle((int)rotationValue % 360);
-		rotation.setRotationCenter( bombPosition.X, bombPosition.Y);
-		rotation.drawNearestNeighbor(gc, bomb, bombPosition.X, bombPosition.Y, GraphicsContext.HCENTER | GraphicsContext.VCENTER);
-		gc.drawString("BACK",450,240, GraphicsContext.RIGHT);	
+		rotation.drawNearestNeighbor(gc, strawberry, strawberryPosition.getX(), strawberryPosition.getY(), GraphicsContext.HCENTER | GraphicsContext.VCENTER);
+		gc.drawString("NEW GAME",160,240, GraphicsContext.RIGHT);
+		rotation.setRotationCenter(watermelonPosition.getX(), watermelonPosition.getY());
+		rotation.drawNearestNeighbor(gc, watermelon, watermelonPosition.getX(), watermelonPosition.getY(), GraphicsContext.HCENTER | GraphicsContext.VCENTER);
+		gc.drawString("SCORE",290,140, GraphicsContext.RIGHT);
+		rotation.setRotationCenter( bombPosition.getX(), bombPosition.getY());
+		rotation.drawNearestNeighbor(gc, bomb, bombPosition.getX(), bombPosition.getY(), GraphicsContext.HCENTER | GraphicsContext.VCENTER);
+		gc.drawString("EXIT",450,240, GraphicsContext.RIGHT);
+
+		if(rotationValue%10==0){
+			 Begin = circle( 100, 200, 60,Begin);
+		}
+		
+		/*AntiAliasedShapes at = new AntiAliasedShapes();
+		at.setThickness(15);
+		at.drawCircleArc(gc, 60,160,90, 360, 360);*/
+	
+		
 	}
 	
 	void drawCut(GraphicsContext gc){
@@ -88,17 +109,27 @@ public class DisplayableScore  extends Widget implements EventHandler, Element {
 		}
 	}
 	
-	void drawnScore(GraphicsContext gc){
+
+	
+	public Position circle(float center_x, float center_y, float radius, Position p){
+	
+		float s = (float) Math.sin(radius);
+		float c = (float) Math.cos(radius);
 		
-		gc.drawString("TOP 3",scoreX,scoreY, GraphicsContext.HCENTER | GraphicsContext.VCENTER);
-		for(int i = 0; i<Score.sharedScore.getScore().size(); i++){
-			gc.drawString(""+i,scoreX-50,(scoreY+(50*(i+1))), GraphicsContext.HCENTER | GraphicsContext.VCENTER);
-			gc.drawString((""+Score.sharedScore.getScore().get(i)) ,scoreX+10,(scoreY+(50*(i+1))), GraphicsContext.HCENTER | GraphicsContext.VCENTER);
-		}
+		// translate point back to origin:
+		  p.addToX(-center_x);
+		  p.addToY(-center_y);
+		  // rotate point
+		  float xnew = p.getX() * c + p.getY() * s;
+		  float ynew = -p.getY() * s + p.getY() * c;
+
+		  // translate point back:
+		  p.setX((int) (xnew + center_x));
+		  p.setY((int) (ynew + center_y));
+		  return p;
+		
 	}
 	
-
-
 	
 	@Override
 	public boolean handleEvent(int event) {
@@ -136,17 +167,34 @@ public class DisplayableScore  extends Widget implements EventHandler, Element {
 	
 	public void goNext(){
 		for(int i = 0; i < list.size()-1; i++){
-			pX=list.get(i).X;
-			pY = list.get(i).Y;
-			double resExit = Math.sqrt(Math.pow((pY-bombPosition.Y),2) + Math.pow((pX - bombPosition.X),2));
-			double resNewGame = Math.sqrt(Math.pow((pY-strawberryPosition.Y),2) + Math.pow((pX-strawberryPosition.X),2));
-			double resScore = Math.sqrt(Math.pow((pY-watermelonPosition.Y),2) + Math.pow((pX-watermelonPosition.X),2));
+			pX=list.get(i).getX();
+			pY = list.get(i).getY();
+			double resExit = Math.sqrt(Math.pow((pY-bombPosition.getY()),2) + Math.pow((pX - bombPosition.getX()),2));
+			double resNewGame = Math.sqrt(Math.pow((pY-strawberryPosition.getY()),2) + Math.pow((pX-strawberryPosition.getX()),2));
+			double resScore = Math.sqrt(Math.pow((pY-watermelonPosition.getY()),2) + Math.pow((pX-watermelonPosition.getX()),2));
 				
 			if(resExit<=10 && !transition){
 				transition = true;
-				MainActivity.nav.show(MenuPage.class.getName(), false);
-				
-			}		
+				if(resExit<=10){
+					ExitHandler exitHandler = ServiceLoaderFactory.getServiceLoader().getService(ExitHandler.class); 
+					if (exitHandler != null)
+					{
+					       exitHandler.exit();
+					}
+					break;
+				}
+			}
+			else if(resNewGame<=10 && !transition){
+				transition = true;
+				MainActivity.nav.show(MainPage.class.getName(), false);
+				break;
+			}
+			else if (resScore<=10 && !transition){
+				transition = true;
+				MainActivity.nav.setTransitionManager(new HorizontalTransitionManager());
+				MainActivity.nav.show(ScorePage.class.getName(), false);
+			}
+			
 		}
 	}
 	
@@ -155,18 +203,25 @@ public class DisplayableScore  extends Widget implements EventHandler, Element {
 
 	@Override
 	public void render(GraphicsContext gc) {
+		int width = this.getWidth();
+		int height =this.getHeight();
+		int[] centerPoint = { width / 2, height / 2 };
+		// Counter diameter equals 9/10 of minimum widget dimension.
+		int counterDiameter = (int) (Math.min(width, height) * 0.9);
+		int circleDiameter = counterDiameter / 3;
 		if(rotationValue >=360) {
 			rotationValue =0;
 		}else{
 			rotationValue += 0.5;
 		}
+		//System.out.println(rotationValue);
 		
 		gc.drawImage(fruitNinjaBackground, 0, 0, 0);
 		drawnFruit(gc);
-		drawnScore(gc);
 		drawCut(gc);
 		goNext();
 		repaint();
+		
 	}
 	
 	
@@ -218,7 +273,7 @@ public class DisplayableScore  extends Widget implements EventHandler, Element {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	
 
 }
-	
-	

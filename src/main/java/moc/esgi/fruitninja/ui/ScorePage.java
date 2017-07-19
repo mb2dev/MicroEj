@@ -1,4 +1,4 @@
-package moc.esgi;
+package moc.esgi.fruitninja.ui;
 
 import ej.widget.container.Grid;
 import ej.widget.navigation.page.Page;

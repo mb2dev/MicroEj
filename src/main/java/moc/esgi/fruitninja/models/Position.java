@@ -1,4 +1,4 @@
-package moc.esgi;
+package moc.esgi.fruitninja.models;
 
 public class Position {
 
@@ -21,6 +21,15 @@ public class Position {
 	public void setY(int y) {
 		Y = y;
 	}
+	
+	public void addToY(float v){
+		Y += v;
+	}
+	
+	public void addToX(float v){
+		X += v;
+	}
+	
 	@Override
 	public String toString() {
 		return "Position [X=" + X + ", Y=" + Y + "]";

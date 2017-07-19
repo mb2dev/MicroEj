@@ -1,3 +1,3 @@
-moc.esgi.MainPage
-moc.esgi.MenuPage
-moc.esgi.ScorePage
+moc.esgi.fruitninja.ui.MainPage
+moc.esgi.fruitninja.ui.MenuPage
+moc.esgi.fruitninja.ui.ScorePage

@@ -1,4 +1,4 @@
-package moc.esgi;
+package moc.esgi.fruitninja.dynamic;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,10 +7,10 @@ public class Body {
 	
 	private final static float dt = 0.1f; //ms
 	
-	float[] pos;
-	float[] velocity;
-	float[][] inertia;
-	ArrayList<Force> forces;
+	protected float[] pos;
+	protected float[] velocity;
+	protected float[][] inertia;
+	protected ArrayList<Force> forces;
 	
 	public Body(float[] pos, float[] velocity, float[][] inertia){
 		super();
@@ -65,9 +65,6 @@ public class Body {
 	
 	public float[] gravityAcceleration(){
 		float[] a = new float[]{ 0, 9.81f, 0 };
-		// Julia
-//		for i=1:length(state.pos)/3
-//				a = append!(a, [0, -9.81, 0.])
 		return a;
 	}
 	
